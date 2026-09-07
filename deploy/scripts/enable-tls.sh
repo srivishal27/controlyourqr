@@ -79,6 +79,8 @@ certbot certonly \
 log "Switching nginx to the TLS configuration"
 install -m 0644 "${APP_DIR}/deploy/nginx/snippets/${APP_NAME}.common.conf" \
   "/etc/nginx/snippets/${APP_NAME}.common.conf"
+install -m 0644 "${APP_DIR}/deploy/nginx/snippets/cloudflare-real-ip.conf" \
+  "/etc/nginx/snippets/cloudflare-real-ip.conf"
 install -m 0644 "${APP_DIR}/deploy/nginx/${APP_NAME}.tls.conf" \
   "/etc/nginx/sites-available/${APP_NAME}.conf"
 ln -sfn "/etc/nginx/sites-available/${APP_NAME}.conf" \

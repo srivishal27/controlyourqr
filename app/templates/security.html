@@ -39,9 +39,18 @@
     <h2>Supply chain</h2>
     <p>
       The site loads exactly two scripts, one stylesheet and one SVG icon, all
-      from this origin. There is no CDN, no web font service, no analytics
-      snippet and no tag manager, so there is no third party who could change
-      the page's behaviour after the fact.
+      from this origin. There is no web font service, no analytics snippet and
+      no tag manager.
+    </p>
+    <p>
+      One honest caveat: <strong>Cloudflare</strong> fronts the domain as a CDN
+      and DoS shield, so it is technically able to alter what it serves.
+      Its content-modifying features — Web Analytics, Email Obfuscation, Rocket
+      Loader and auto-minification — are switched off for this domain, and the
+      Content-Security-Policy above would block an injected third-party script
+      regardless. You can confirm the edge is serving what we published by
+      comparing a response against the
+      <a href="https://github.com/srivishal27/controlyourqr" rel="noopener noreferrer">source</a>.
     </p>
     <ul>
       <li>The encoder is <a href="https://github.com/soldair/node-qrcode" rel="noopener noreferrer">node-qrcode</a> (MIT), pinned to an exact version and bundled from source with esbuild by <code>tools/build-vendor.sh</code>.</li>

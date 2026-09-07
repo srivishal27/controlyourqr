@@ -83,6 +83,8 @@ log "Configuring nginx"
 mkdir -p /etc/nginx/snippets /var/www/html/.well-known/acme-challenge
 install -m 0644 "${APP_DIR}/deploy/nginx/snippets/${APP_NAME}.common.conf" \
   "/etc/nginx/snippets/${APP_NAME}.common.conf"
+install -m 0644 "${APP_DIR}/deploy/nginx/snippets/cloudflare-real-ip.conf" \
+  "/etc/nginx/snippets/cloudflare-real-ip.conf"
 
 # Pick the site file that matches reality. Certificates are obtained with
 # `certbot certonly`, so certbot never edits these files and re-running this

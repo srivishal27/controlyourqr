@@ -47,6 +47,23 @@
       lost device should not be able to reveal what you encoded.
     </p>
 
+    <h2>The network in front of us</h2>
+    <p>
+      This site is served from a machine we operate, with
+      <strong>Cloudflare</strong> in front of it as a CDN and denial-of-service
+      shield. That is a real intermediary and we would rather say so plainly
+      than let you discover it in a response header.
+    </p>
+    <ul>
+      <li>Cloudflare terminates TLS at its edge, so it can see the <em>metadata</em> of your visit: your IP address, which page you asked for, and when.</li>
+      <li>It cannot see what you encode. Your QR content is never part of any request — it never leaves your browser — so there is nothing in the traffic for an intermediary to read.</li>
+      <li>Cloudflare's own analytics and script-injection features are switched off for this domain, and the site's Content-Security-Policy would block an injected third-party script even if one were turned on by accident.</li>
+    </ul>
+    <p>
+      If you would rather not involve a CDN at all, the project is MIT licensed
+      and runs on any static host — or straight from a local copy, offline.
+    </p>
+
     <h2>What the server sees</h2>
     <p>
       Serving a web page requires the web server to receive an HTTP request. Our
