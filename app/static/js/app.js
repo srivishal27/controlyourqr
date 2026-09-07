@@ -260,8 +260,8 @@
 
     if (relativeLuminance(state.fg) > relativeLuminance(state.bg)) {
       notes.push(
-        'the pattern is lighter than its background — many readers will not ' +
-        'decode an inverted code'
+        'the pattern is lighter than its background, and many readers will ' +
+        'not decode an inverted code'
       );
     } else if (ratio < 4) {
       notes.push('contrast is only ' + ratio.toFixed(1) + ':1, which is low for reliable scanning');
@@ -381,7 +381,7 @@
     var raw = val('in-url');
     if (raw && payload && payload !== raw && payload.indexOf('https://') === 0) {
       el.urlHint.textContent =
-        'Encoding as ' + payload + ' — add http:// explicitly if you need it.';
+        'Encoding as ' + payload + '. Add http:// explicitly if you need it.';
     } else {
       el.urlHint.textContent =
         'The address is written into the code itself. No shortener, no tracking hop.';

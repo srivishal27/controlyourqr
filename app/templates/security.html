@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Security — {{ site_name }}{% endblock %}
+{% block title %}Security | {{ site_name }}{% endblock %}
 {% block description %}How ControlYourQR is hardened, how to verify the privacy claims yourself, and how to report a vulnerability.{% endblock %}
 
 {% block content %}
@@ -15,7 +15,7 @@
     <p>
       The asset being protected is the content a user encodes: private URLs,
       Wi-Fi credentials, personal contact details. The adversary we design
-      against is the operator of the website itself — that is, us — plus anyone
+      against is the operator of the website itself (that is, us), plus anyone
       who compromises it, and any third party we might otherwise have invited
       onto the page.
     </p>
@@ -28,12 +28,12 @@
 
     <h2>Response headers</h2>
     <ul>
-      <li><strong><code>Content-Security-Policy</code></strong> — <code>default-src 'self'</code> with <code>connect-src 'none'</code>, <code>object-src 'none'</code>, <code>base-uri 'none'</code>, <code>form-action 'none'</code> and <code>frame-ancestors 'none'</code>. No <code>unsafe-inline</code>, no <code>unsafe-eval</code>, no nonces: every script and stylesheet is an external file on this origin.</li>
-      <li><strong><code>Strict-Transport-Security</code></strong> — two years, <code>includeSubDomains</code>, preload-eligible.</li>
+      <li><strong><code>Content-Security-Policy</code></strong>. <code>default-src 'self'</code> with <code>connect-src 'none'</code>, <code>object-src 'none'</code>, <code>base-uri 'none'</code>, <code>form-action 'none'</code> and <code>frame-ancestors 'none'</code>. No <code>unsafe-inline</code>, no <code>unsafe-eval</code>, no nonces: every script and stylesheet is an external file on this origin.</li>
+      <li><strong><code>Strict-Transport-Security</code></strong>. Two years, <code>includeSubDomains</code>, preload-eligible.</li>
       <li><strong><code>X-Content-Type-Options: nosniff</code></strong> and <strong><code>X-Frame-Options: DENY</code></strong>.</li>
-      <li><strong><code>Referrer-Policy: no-referrer</code></strong> — we leak nothing to anywhere you navigate next.</li>
-      <li><strong><code>Permissions-Policy</code></strong> — camera, microphone, geolocation, USB, serial, payment and a dozen more are switched off at the platform level.</li>
-      <li><strong>Cross-origin isolation</strong> — <code>COOP: same-origin</code>, <code>CORP: same-origin</code>, <code>COEP: require-corp</code>.</li>
+      <li><strong><code>Referrer-Policy: no-referrer</code></strong>. We leak nothing to anywhere you navigate next.</li>
+      <li><strong><code>Permissions-Policy</code></strong>. Camera, microphone, geolocation, USB, serial, payment and a dozen more are switched off at the platform level.</li>
+      <li><strong>Cross-origin isolation</strong>. <code>COOP: same-origin</code>, <code>CORP: same-origin</code>, <code>COEP: require-corp</code>.</li>
     </ul>
 
     <h2>Supply chain</h2>
@@ -45,8 +45,8 @@
     <p>
       One honest caveat: <strong>Cloudflare</strong> fronts the domain as a CDN
       and DoS shield, so it is technically able to alter what it serves.
-      Its content-modifying features — Web Analytics, Email Obfuscation, Rocket
-      Loader and auto-minification — are switched off for this domain, and the
+      Its content-modifying features (Web Analytics, Email Obfuscation, Rocket
+      Loader and auto-minification) are switched off for this domain, and the
       Content-Security-Policy above would block an injected third-party script
       regardless. You can confirm the edge is serving what we published by
       comparing a response against the
@@ -63,7 +63,7 @@
       <li>Load the generator, disconnect from the network, and confirm that generating and downloading still work end to end.</li>
       <li>Open DevTools &rarr; Network and type into the fields. There are no requests.</li>
       <li>Inspect the response headers and read the CSP for yourself.</li>
-      <li>Read <code>app/static/js/app.js</code> in the repository — it is unminified and commented, and contains no network calls.</li>
+      <li>Read <code>app/static/js/app.js</code> in the repository. It is unminified and commented, and contains no network calls.</li>
       <li>Rebuild the vendor bundle with <code>tools/build-vendor.sh</code> and diff it against the committed file.</li>
     </ul>
 
@@ -78,7 +78,7 @@
     <p>
       Please give a reasonable window to ship a fix before publishing. Testing
       against this site is fine as long as it is non-destructive and does not
-      degrade the service for anyone else — no denial-of-service, no automated
+      degrade the service for anyone else: no denial-of-service, no automated
       scanning at volume, no attempts against third-party infrastructure.
     </p>
 

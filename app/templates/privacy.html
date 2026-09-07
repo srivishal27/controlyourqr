@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Privacy — {{ site_name }}{% endblock %}
+{% block title %}Privacy | {{ site_name }}{% endblock %}
 {% block description %}ControlYourQR collects nothing. No accounts, no cookies, no analytics, no logs of your content. Here is exactly what that means.{% endblock %}
 
 {% block content %}
@@ -13,8 +13,8 @@
   <div class="doc-body">
     <div class="callout">
       <p>
-        The content you type into the generator — links, text, Wi-Fi passwords,
-        contact details, coordinates — is encoded into a QR code by JavaScript
+        The content you type into the generator (links, text, Wi-Fi passwords,
+        contact details, coordinates) is encoded into a QR code by JavaScript
         running inside your browser. It is never transmitted to this server or
         to any other. There is no endpoint on this site that accepts it.
       </p>
@@ -38,8 +38,8 @@
       any time by clearing site data.
     </p>
     <ul>
-      <li><code>cyqr:theme</code> — whether you chose the light or dark theme.</li>
-      <li><code>cyqr:options</code> — your appearance defaults: error-correction level, export size, quiet zone and colours.</li>
+      <li><code>cyqr:theme</code> stores whether you chose the light or dark theme.</li>
+      <li><code>cyqr:options</code> stores your appearance defaults: error-correction level, export size, quiet zone and colours.</li>
     </ul>
     <p>
       The <em>content</em> of your QR codes is deliberately <strong>not</strong>
@@ -56,12 +56,12 @@
     </p>
     <ul>
       <li>Cloudflare terminates TLS at its edge, so it can see the <em>metadata</em> of your visit: your IP address, which page you asked for, and when.</li>
-      <li>It cannot see what you encode. Your QR content is never part of any request — it never leaves your browser — so there is nothing in the traffic for an intermediary to read.</li>
+      <li>It cannot see what you encode. Your QR content never leaves your browser, so it is never part of any request and there is nothing in the traffic for an intermediary to read.</li>
       <li>Cloudflare's own analytics and script-injection features are switched off for this domain, and the site's Content-Security-Policy would block an injected third-party script even if one were turned on by accident.</li>
     </ul>
     <p>
       If you would rather not involve a CDN at all, the project is MIT licensed
-      and runs on any static host — or straight from a local copy, offline.
+      and runs on any static host, or straight from a local copy while offline.
     </p>
 
     <h2>What the server sees</h2>
@@ -74,7 +74,7 @@
     </p>
     <ul>
       <li>These access logs are kept for a short operational window and used only for availability and abuse mitigation.</li>
-      <li>They record which <em>page</em> was requested — never what you typed into it, since that is never sent.</li>
+      <li>They record which <em>page</em> was requested. They never record what you typed into it, because that is never sent.</li>
       <li>They are not joined to any profile, advertising identifier or third-party service.</li>
     </ul>
 
@@ -83,7 +83,7 @@
       Every response from this site carries a
       <code>Content-Security-Policy</code> header containing
       <code>connect-src 'none'</code>. That directive instructs your browser to
-      block all outbound network calls from our pages — fetch, XHR, WebSocket,
+      block all outbound network calls from our pages: fetch, XHR, WebSocket,
       EventSource and beacons alike. Even a compromised or malicious script on
       this site could not exfiltrate what you typed, because the browser itself
       refuses to make the request.

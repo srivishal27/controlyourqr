@@ -14,7 +14,7 @@
     <p class="lede">
       Everything is encoded locally by JavaScript running on your own machine.
       Your text, links, Wi-Fi passwords and contact details are never uploaded,
-      never logged and never stored — not by us, not by anyone.
+      never logged and never stored, not by us and not by anyone.
     </p>
 
     <ul class="trust-chips">
@@ -185,7 +185,7 @@
                 <button type="button" role="radio" data-ecc="Q" aria-checked="false">Q<small>25%</small></button>
                 <button type="button" role="radio" data-ecc="H" aria-checked="false">H<small>30%</small></button>
               </div>
-              <p class="hint">Higher levels survive more damage, smudging and print wear — at the cost of a denser code.</p>
+              <p class="hint">Higher levels survive more damage, smudging and print wear, at the cost of a denser code.</p>
             </div>
 
             <div class="opt">
@@ -235,10 +235,10 @@
           <p class="qr-error" id="qr-error" role="alert" hidden></p>
 
           <dl class="qr-meta" id="qr-meta" hidden>
-            <div><dt>Version</dt><dd id="meta-version">—</dd></div>
-            <div><dt>Modules</dt><dd id="meta-modules">—</dd></div>
-            <div><dt>Correction</dt><dd id="meta-ecc">—</dd></div>
-            <div><dt>Export</dt><dd id="meta-export">—</dd></div>
+            <div><dt>Version</dt><dd id="meta-version">-</dd></div>
+            <div><dt>Modules</dt><dd id="meta-modules">-</dd></div>
+            <div><dt>Correction</dt><dd id="meta-ecc">-</dd></div>
+            <div><dt>Export</dt><dd id="meta-export">-</dd></div>
           </dl>
 
           <p class="qr-warn" id="qr-warn" hidden></p>
@@ -291,7 +291,7 @@
           <li>
             <strong>The destination can be changed later.</strong>
             Whoever controls that redirect controls where your code sends
-            people — including after your posters are on the wall.
+            people, including after your posters are on the wall.
           </li>
           <li>
             <strong>Every scan is logged.</strong>
@@ -352,7 +352,7 @@
       <strong>The honest caveat:</strong> dynamic QR codes are a legitimate
       product when you genuinely need editable destinations and scan analytics,
       and some vendors are upfront about it. The problem is the sites that sell
-      you one while calling it a free QR code — and the ones that quietly read
+      you one while calling it a free QR code, and the ones that quietly read
       what you typed on the way. If you need a static code that simply works
       forever, you should never have to hand your data to anyone.
     </p>
@@ -388,7 +388,7 @@
         <h3>Read the policy the browser enforces</h3>
         <p>
           Check the response headers for <code>Content-Security-Policy</code>.
-          It contains <code>connect-src 'none'</code> — an instruction to your
+          It contains <code>connect-src 'none'</code>, an instruction to your
           browser to block every outbound request this page could attempt.
           Even if our code tried to phone home, your browser would stop it.
         </p>
@@ -398,8 +398,8 @@
         <p>
           The whole project is public and MIT licensed. The QR encoder is the
           open-source <code>node-qrcode</code> library, built from source and
-          served from this domain — no font service, no analytics snippet and
-          no tag manager anywhere on the site. A CDN fronts the domain for
+          served from this domain. There is no font service, no analytics
+          snippet and no tag manager anywhere on the site. A CDN fronts it for
           denial-of-service protection, which we
           <a href="{{ url_for('site.privacy') }}">spell out on the privacy page</a>
           rather than leave you to find in a header.
@@ -433,11 +433,11 @@
           The design goal was narrow and deliberate: produce a correct, static,
           print-quality QR code without the site ever learning what it contains.
           That constraint is why there is no account system, no history, no
-          cloud sync and no API — each of those would require the data to leave
+          cloud sync and no API. Each of those would require the data to leave
           your device.
         </p>
         <p>
-          Found a flaw? Reports are genuinely welcome — see
+          Found a flaw? Reports are genuinely welcome. See
           <a href="{{ url_for('site.security') }}">the security page</a> or
           <a href="{{ url_for('site.security_txt') }}">security.txt</a>.
         </p>
