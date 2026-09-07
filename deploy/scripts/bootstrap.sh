@@ -15,6 +15,7 @@ set -euo pipefail
 APP_NAME="controlyourqr"
 APP_USER="controlyourqr"
 APP_DIR="/opt/${APP_NAME}"
+DOMAIN="${DOMAIN:-controlyourqr.com}"
 SRC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
 log() { printf '\n\033[1;34m==>\033[0m %s\n' "$*"; }
@@ -79,7 +80,22 @@ systemctl restart "${APP_NAME}.service"
 
 # --------------------------------------------------------------------------- #
 log "Configuring nginx"
-install -m 0644 "${APP_DIR}/deploy/nginx/${APP_NAME}.conf" \
+mkdir -p /etc/nginx/snippets /var/www/html/.well-known/acme-challenge
+install -m 0644 "${APP_DIR}/deploy/nginx/snippets/${APP_NAME}.common.conf" \
+  "/etc/nginx/snippets/${APP_NAME}.common.conf"
+
+# Pick the site file that matches reality. Certificates are obtained with
+# `certbot certonly`, so certbot never edits these files and re-running this
+# script cannot clobber a working TLS configuration.
+if [[ -f "/etc/letsencrypt/live/${DOMAIN}/fullchain.pem" ]]; then
+  VARIANT="tls"
+else
+  VARIANT="http"
+  echo "    no certificate for ${DOMAIN} yet — serving plain HTTP"
+fi
+echo "    using the ${VARIANT} site configuration"
+
+install -m 0644 "${APP_DIR}/deploy/nginx/${APP_NAME}.${VARIANT}.conf" \
   "/etc/nginx/sites-available/${APP_NAME}.conf"
 ln -sfn "/etc/nginx/sites-available/${APP_NAME}.conf" \
   "/etc/nginx/sites-enabled/${APP_NAME}.conf"
@@ -115,7 +131,7 @@ $(printf '\033[1;32m==> ControlYourQR is live over HTTP.\033[0m')
 Next steps:
   1. Point the DNS A record for controlyourqr.com at this machine's external IP.
   2. Once it resolves, enable HTTPS:
-       sudo certbot --nginx -d controlyourqr.com -d www.controlyourqr.com
+       sudo ${APP_DIR}/deploy/scripts/enable-tls.sh
 
      HSTS needs no further action: the app emits it only on requests that
      actually arrived over TLS, so it switches itself on with the certificate.

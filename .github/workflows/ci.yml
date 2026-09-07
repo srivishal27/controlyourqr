@@ -66,6 +66,7 @@ jobs:
         run: |
           bash -n deploy/scripts/bootstrap.sh
           bash -n deploy/scripts/deploy.sh
+          bash -n deploy/scripts/enable-tls.sh
           bash -n tools/build-vendor.sh
 
       - name: systemd unit
@@ -74,8 +75,10 @@ jobs:
       - name: nginx config
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq nginx
-          sudo mkdir -p /opt/controlyourqr/app/static
-          sudo cp deploy/nginx/controlyourqr.conf /etc/nginx/sites-available/
-          sudo ln -sf /etc/nginx/sites-available/controlyourqr.conf /etc/nginx/sites-enabled/
+          sudo mkdir -p /opt/controlyourqr/app/static /etc/nginx/snippets
+          sudo cp deploy/nginx/snippets/controlyourqr.common.conf /etc/nginx/snippets/
           sudo rm -f /etc/nginx/sites-enabled/default
+          # The HTTP variant is the one a fresh host starts on.
+          sudo cp deploy/nginx/controlyourqr.http.conf /etc/nginx/sites-available/controlyourqr.conf
+          sudo ln -sf /etc/nginx/sites-available/controlyourqr.conf /etc/nginx/sites-enabled/
           sudo nginx -t

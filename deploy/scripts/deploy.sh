@@ -12,6 +12,7 @@ set -euo pipefail
 APP_NAME="controlyourqr"
 APP_USER="controlyourqr"
 APP_DIR="/opt/${APP_NAME}"
+DOMAIN="${DOMAIN:-controlyourqr.com}"
 CHECKOUT="${CHECKOUT_DIR:-/srv/${APP_NAME}.git-checkout}"
 REF="${1:-main}"
 
@@ -51,7 +52,14 @@ chmod -R o+rX "${APP_DIR}/app/static"
 log "Reloading services"
 install -m 0644 "${APP_DIR}/deploy/systemd/${APP_NAME}.service" \
   "/etc/systemd/system/${APP_NAME}.service"
-install -m 0644 "${APP_DIR}/deploy/nginx/${APP_NAME}.conf" \
+install -m 0644 "${APP_DIR}/deploy/nginx/snippets/${APP_NAME}.common.conf" \
+  "/etc/nginx/snippets/${APP_NAME}.common.conf"
+if [[ -f "/etc/letsencrypt/live/${DOMAIN}/fullchain.pem" ]]; then
+  VARIANT="tls"
+else
+  VARIANT="http"
+fi
+install -m 0644 "${APP_DIR}/deploy/nginx/${APP_NAME}.${VARIANT}.conf" \
   "/etc/nginx/sites-available/${APP_NAME}.conf"
 
 nginx -t

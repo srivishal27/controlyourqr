@@ -109,7 +109,7 @@ site, and enables the firewall.
 Then point DNS at the host and enable TLS:
 
 ```bash
-sudo certbot --nginx -d controlyourqr.com -d www.controlyourqr.com
+sudo /opt/controlyourqr/deploy/scripts/enable-tls.sh
 ```
 
 HSTS requires no follow-up step: the application emits
