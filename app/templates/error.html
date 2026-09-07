@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}{{ code }} — {{ site_name }}{% endblock %}
+{% block description %}{{ message }}{% endblock %}
+
+{% block content %}
+<div class="error-page wrap">
+  <div>
+    <p class="error-code">{{ code }}</p>
+    <h1>{{ message }}</h1>
+    <p>The generator is still where you left it.</p>
+    <a class="btn btn-primary" href="{{ url_for('site.index') }}">Back to the generator</a>
+  </div>
+</div>
+{% endblock %}

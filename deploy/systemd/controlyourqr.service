@@ -1,0 +1,55 @@
+[Unit]
+Description=ControlYourQR — client-side QR code generator (gunicorn)
+Documentation=https://github.com/srivishal27/controlyourqr
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=notify
+User=controlyourqr
+Group=controlyourqr
+WorkingDirectory=/opt/controlyourqr
+RuntimeDirectory=controlyourqr
+
+Environment=FLASK_ENV=production
+Environment=PYTHONUNBUFFERED=1
+Environment=PYTHONDONTWRITEBYTECODE=1
+EnvironmentFile=-/etc/controlyourqr/app.env
+
+ExecStart=/opt/controlyourqr/.venv/bin/gunicorn --config gunicorn.conf.py wsgi:application
+ExecReload=/bin/kill -s HUP $MAINPID
+
+Restart=always
+RestartSec=3
+KillMode=mixed
+TimeoutStopSec=20
+
+# --- Sandboxing ----------------------------------------------------------- #
+# The service reads its own code and writes nothing. Everything else is denied.
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectProc=invisible
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectControlGroups=true
+ProtectHostname=true
+ProtectClock=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallErrorNumber=EPERM
+CapabilityBoundingSet=
+AmbientCapabilities=
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

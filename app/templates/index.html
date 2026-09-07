@@ -1,0 +1,465 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="hero">
+  <div class="wrap">
+    <p class="eyebrow">
+      <span class="dot" aria-hidden="true"></span>
+      Runs entirely in your browser
+    </p>
+
+    <h1>A QR code generator that<br>never sees your data.</h1>
+
+    <p class="lede">
+      Everything is encoded locally by JavaScript running on your own machine.
+      Your text, links, Wi-Fi passwords and contact details are never uploaded,
+      never logged and never stored — not by us, not by anyone.
+    </p>
+
+    <ul class="trust-chips">
+      <li><span aria-hidden="true">&#9679;</span> 100% client-side</li>
+      <li><span aria-hidden="true">&#9679;</span> Static codes, no redirects</li>
+      <li><span aria-hidden="true">&#9679;</span> No sign-up, no watermark</li>
+      <li><span aria-hidden="true">&#9679;</span> Free, forever</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===================== GENERATOR ===================== -->
+<section class="generator" id="generator" aria-labelledby="generator-heading">
+  <div class="wrap">
+    <h2 class="section-heading" id="generator-heading">Generate</h2>
+
+    <div class="tool">
+
+      <!-- ---------- Input column ---------- -->
+      <div class="panel panel-input">
+        <div class="tablist-scroll">
+          <div class="tablist" role="tablist" aria-label="QR code content type">
+            <button type="button" role="tab" id="tab-url"   aria-controls="fields-url"   aria-selected="true"  data-type="url">Link</button>
+            <button type="button" role="tab" id="tab-text"  aria-controls="fields-text"  aria-selected="false" data-type="text" tabindex="-1">Text</button>
+            <button type="button" role="tab" id="tab-wifi"  aria-controls="fields-wifi"  aria-selected="false" data-type="wifi" tabindex="-1">Wi-Fi</button>
+            <button type="button" role="tab" id="tab-email" aria-controls="fields-email" aria-selected="false" data-type="email" tabindex="-1">Email</button>
+            <button type="button" role="tab" id="tab-sms"   aria-controls="fields-sms"   aria-selected="false" data-type="sms" tabindex="-1">SMS</button>
+            <button type="button" role="tab" id="tab-tel"   aria-controls="fields-tel"   aria-selected="false" data-type="tel" tabindex="-1">Phone</button>
+            <button type="button" role="tab" id="tab-vcard" aria-controls="fields-vcard" aria-selected="false" data-type="vcard" tabindex="-1">Contact</button>
+            <button type="button" role="tab" id="tab-geo"   aria-controls="fields-geo"   aria-selected="false" data-type="geo" tabindex="-1">Location</button>
+          </div>
+        </div>
+
+        <div class="fields">
+          <!-- Link -->
+          <div class="field-group" id="fields-url" role="tabpanel" aria-labelledby="tab-url">
+            <label for="in-url">Destination URL</label>
+            <input type="url" id="in-url" data-field placeholder="https://example.com/page" autocomplete="off" spellcheck="false">
+            <p class="hint">The address is written into the code itself. No shortener, no tracking hop.</p>
+          </div>
+
+          <!-- Text -->
+          <div class="field-group" id="fields-text" role="tabpanel" aria-labelledby="tab-text" hidden>
+            <label for="in-text">Plain text</label>
+            <textarea id="in-text" data-field rows="5" placeholder="Any text you want to encode…" spellcheck="false"></textarea>
+          </div>
+
+          <!-- Wi-Fi -->
+          <div class="field-group" id="fields-wifi" role="tabpanel" aria-labelledby="tab-wifi" hidden>
+            <div class="field-row">
+              <div>
+                <label for="in-wifi-ssid">Network name (SSID)</label>
+                <input type="text" id="in-wifi-ssid" data-field autocomplete="off" spellcheck="false">
+              </div>
+              <div>
+                <label for="in-wifi-enc">Security</label>
+                <select id="in-wifi-enc" data-field>
+                  <option value="WPA" selected>WPA / WPA2 / WPA3</option>
+                  <option value="WEP">WEP</option>
+                  <option value="nopass">Open (no password)</option>
+                </select>
+              </div>
+            </div>
+            <label for="in-wifi-pass">Password</label>
+            <input type="text" id="in-wifi-pass" data-field autocomplete="off" spellcheck="false">
+            <label class="checkbox">
+              <input type="checkbox" id="in-wifi-hidden" data-field>
+              <span>Hidden network</span>
+            </label>
+            <p class="hint hint-strong">
+              This is exactly the field you should never type into a hosted
+              generator. Here it stays in this tab and goes no further.
+            </p>
+          </div>
+
+          <!-- Email -->
+          <div class="field-group" id="fields-email" role="tabpanel" aria-labelledby="tab-email" hidden>
+            <label for="in-email-to">To</label>
+            <input type="email" id="in-email-to" data-field placeholder="name@example.com" autocomplete="off" spellcheck="false">
+            <label for="in-email-subject">Subject</label>
+            <input type="text" id="in-email-subject" data-field>
+            <label for="in-email-body">Message</label>
+            <textarea id="in-email-body" data-field rows="3"></textarea>
+          </div>
+
+          <!-- SMS -->
+          <div class="field-group" id="fields-sms" role="tabpanel" aria-labelledby="tab-sms" hidden>
+            <label for="in-sms-number">Phone number</label>
+            <input type="tel" id="in-sms-number" data-field placeholder="+91 98765 43210" autocomplete="off">
+            <label for="in-sms-body">Message</label>
+            <textarea id="in-sms-body" data-field rows="3"></textarea>
+          </div>
+
+          <!-- Phone -->
+          <div class="field-group" id="fields-tel" role="tabpanel" aria-labelledby="tab-tel" hidden>
+            <label for="in-tel">Phone number</label>
+            <input type="tel" id="in-tel" data-field placeholder="+91 98765 43210" autocomplete="off">
+            <p class="hint">Scanning opens the dialler with this number pre-filled.</p>
+          </div>
+
+          <!-- vCard -->
+          <div class="field-group" id="fields-vcard" role="tabpanel" aria-labelledby="tab-vcard" hidden>
+            <div class="field-row">
+              <div>
+                <label for="in-vc-first">First name</label>
+                <input type="text" id="in-vc-first" data-field autocomplete="off">
+              </div>
+              <div>
+                <label for="in-vc-last">Last name</label>
+                <input type="text" id="in-vc-last" data-field autocomplete="off">
+              </div>
+            </div>
+            <div class="field-row">
+              <div>
+                <label for="in-vc-org">Organisation</label>
+                <input type="text" id="in-vc-org" data-field autocomplete="off">
+              </div>
+              <div>
+                <label for="in-vc-title">Job title</label>
+                <input type="text" id="in-vc-title" data-field autocomplete="off">
+              </div>
+            </div>
+            <div class="field-row">
+              <div>
+                <label for="in-vc-phone">Phone</label>
+                <input type="tel" id="in-vc-phone" data-field autocomplete="off">
+              </div>
+              <div>
+                <label for="in-vc-email">Email</label>
+                <input type="email" id="in-vc-email" data-field autocomplete="off" spellcheck="false">
+              </div>
+            </div>
+            <label for="in-vc-url">Website</label>
+            <input type="url" id="in-vc-url" data-field autocomplete="off" spellcheck="false">
+            <label for="in-vc-note">Note</label>
+            <input type="text" id="in-vc-note" data-field autocomplete="off">
+          </div>
+
+          <!-- Location -->
+          <div class="field-group" id="fields-geo" role="tabpanel" aria-labelledby="tab-geo" hidden>
+            <div class="field-row">
+              <div>
+                <label for="in-geo-lat">Latitude</label>
+                <input type="text" id="in-geo-lat" data-field placeholder="26.5123" inputmode="decimal" autocomplete="off">
+              </div>
+              <div>
+                <label for="in-geo-lng">Longitude</label>
+                <input type="text" id="in-geo-lng" data-field placeholder="80.2329" inputmode="decimal" autocomplete="off">
+              </div>
+            </div>
+            <p class="hint">Coordinates are typed by you. The page never asks your browser for your real location.</p>
+          </div>
+        </div>
+
+        <!-- Options -->
+        <details class="options" open>
+          <summary>
+            <span>Appearance &amp; encoding</span>
+            <svg viewBox="0 0 24 24" class="chev" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+
+          <div class="options-body">
+            <div class="opt">
+              <span class="opt-label" id="ecc-label">Error correction</span>
+              <div class="segmented" role="radiogroup" aria-labelledby="ecc-label">
+                <button type="button" role="radio" data-ecc="L" aria-checked="false">L<small>7%</small></button>
+                <button type="button" role="radio" data-ecc="M" aria-checked="true">M<small>15%</small></button>
+                <button type="button" role="radio" data-ecc="Q" aria-checked="false">Q<small>25%</small></button>
+                <button type="button" role="radio" data-ecc="H" aria-checked="false">H<small>30%</small></button>
+              </div>
+              <p class="hint">Higher levels survive more damage, smudging and print wear — at the cost of a denser code.</p>
+            </div>
+
+            <div class="opt">
+              <label class="opt-label" for="opt-size">Export size <span class="opt-value" id="size-value">1024 px</span></label>
+              <input type="range" id="opt-size" min="256" max="2048" step="64" value="1024">
+            </div>
+
+            <div class="opt">
+              <label class="opt-label" for="opt-margin">Quiet zone <span class="opt-value" id="margin-value">4 modules</span></label>
+              <input type="range" id="opt-margin" min="0" max="10" step="1" value="4">
+              <p class="hint">The blank border scanners need to lock on. Below 4 is risky in print.</p>
+            </div>
+
+            <div class="opt opt-colors">
+              <div>
+                <label class="opt-label" for="opt-fg">Foreground</label>
+                <div class="color-field">
+                  <input type="color" id="opt-fg" value="#000000">
+                  <input type="text" id="opt-fg-hex" value="#000000" spellcheck="false" aria-label="Foreground hex value">
+                </div>
+              </div>
+              <div>
+                <label class="opt-label" for="opt-bg">Background</label>
+                <div class="color-field">
+                  <input type="color" id="opt-bg" value="#ffffff">
+                  <input type="text" id="opt-bg-hex" value="#ffffff" spellcheck="false" aria-label="Background hex value">
+                </div>
+              </div>
+            </div>
+
+            <button type="button" class="btn btn-ghost btn-sm" id="btn-reset">Reset to defaults</button>
+          </div>
+        </details>
+      </div>
+
+      <!-- ---------- Preview column ---------- -->
+      <div class="panel panel-preview">
+        <div class="preview-sticky">
+          <div class="qr-stage" id="qr-stage" data-state="empty">
+            <canvas id="qr-canvas" width="512" height="512" role="img"
+                    aria-label="Generated QR code preview"></canvas>
+            <p class="qr-placeholder" id="qr-placeholder">
+              Your QR code appears here as you type.
+            </p>
+          </div>
+
+          <p class="qr-error" id="qr-error" role="alert" hidden></p>
+
+          <dl class="qr-meta" id="qr-meta" hidden>
+            <div><dt>Version</dt><dd id="meta-version">—</dd></div>
+            <div><dt>Modules</dt><dd id="meta-modules">—</dd></div>
+            <div><dt>Correction</dt><dd id="meta-ecc">—</dd></div>
+            <div><dt>Export</dt><dd id="meta-export">—</dd></div>
+          </dl>
+
+          <p class="qr-warn" id="qr-warn" hidden></p>
+
+          <div class="actions">
+            <button type="button" class="btn btn-primary" id="btn-png" disabled>Download PNG</button>
+            <button type="button" class="btn" id="btn-svg" disabled>Download SVG</button>
+            <button type="button" class="btn btn-ghost" id="btn-copy" disabled>Copy image</button>
+          </div>
+
+          <p class="privacy-seal">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="seal-icon">
+              <path d="M12 2.5 4.5 5.8v5.4c0 4.6 3.1 8.9 7.5 10.3 4.4-1.4 7.5-5.7 7.5-10.3V5.8L12 2.5Z"/>
+              <path d="m8.6 12.1 2.3 2.3 4.5-4.6" class="seal-check"/>
+            </svg>
+            <span>Encoded on this device. <a href="#verify">Verify it yourself</a>.</span>
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== WHY ===================== -->
+<section class="why" id="why" aria-labelledby="why-heading">
+  <div class="wrap">
+    <h2 class="section-heading" id="why-heading">Why this exists</h2>
+    <p class="section-lede">
+      Most "free online QR generators" are not free, and many are not even QR
+      generators. They are redirect services with a QR code drawn on top.
+      Here is the pattern, and how this site refuses it.
+    </p>
+
+    <div class="compare">
+      <article class="card card-warn">
+        <h3><span class="card-tag">The usual trick</span></h3>
+        <ul class="checklist checklist-bad">
+          <li>
+            <strong>The code points at them, not at you.</strong>
+            Many sites hand you a <em>dynamic</em> QR that encodes
+            <code>their-domain.com/abc123</code>. Every single scan travels
+            through their server before reaching your link.
+          </li>
+          <li>
+            <strong>It expires unless you pay.</strong>
+            The trial ends, the redirect is switched off, and the code you
+            printed on 5,000 flyers, a banner or a product label goes dead.
+          </li>
+          <li>
+            <strong>The destination can be changed later.</strong>
+            Whoever controls that redirect controls where your code sends
+            people — including after your posters are on the wall.
+          </li>
+          <li>
+            <strong>Every scan is logged.</strong>
+            IP address, rough location, device, time and referrer are collected
+            from people who only wanted to scan a menu.
+          </li>
+          <li>
+            <strong>Your input was uploaded.</strong>
+            The Wi-Fi password, private link or contact card you typed was sent
+            to a server you have never audited and cannot inspect.
+          </li>
+          <li>
+            <strong>Then come the walls.</strong>
+            Sign-up prompts, watermarks, "high resolution is a Pro feature",
+            an email address harvested for marketing.
+          </li>
+        </ul>
+      </article>
+
+      <article class="card card-good">
+        <h3><span class="card-tag">What this site does</span></h3>
+        <ul class="checklist checklist-good">
+          <li>
+            <strong>Static codes only.</strong>
+            Your destination is encoded directly into the pattern. There is no
+            middleman domain and no hop to anyone's server.
+          </li>
+          <li>
+            <strong>It cannot expire.</strong>
+            A static QR code keeps working even if this website disappears
+            tomorrow. Nothing to renew, nothing to switch off.
+          </li>
+          <li>
+            <strong>Nobody can repoint it.</strong>
+            Not us, not a future owner of this domain. The link lives in the
+            ink, not in a database.
+          </li>
+          <li>
+            <strong>No scan tracking exists.</strong>
+            There is no analytics on the scan path, because there is no scan
+            path. We never learn that your code was used.
+          </li>
+          <li>
+            <strong>Nothing you type leaves the tab.</strong>
+            The encoder is JavaScript running on your machine. The server sends
+            files out; it takes nothing in.
+          </li>
+          <li>
+            <strong>Free, unlimited, unbranded.</strong>
+            No account, no watermark, no resolution limit, no "Pro". Print-ready
+            PNG and true vector SVG for everyone.
+          </li>
+        </ul>
+      </article>
+    </div>
+
+    <p class="why-footnote">
+      <strong>The honest caveat:</strong> dynamic QR codes are a legitimate
+      product when you genuinely need editable destinations and scan analytics,
+      and some vendors are upfront about it. The problem is the sites that sell
+      you one while calling it a free QR code — and the ones that quietly read
+      what you typed on the way. If you need a static code that simply works
+      forever, you should never have to hand your data to anyone.
+    </p>
+  </div>
+</section>
+
+<!-- ===================== VERIFY ===================== -->
+<section class="verify" id="verify" aria-labelledby="verify-heading">
+  <div class="wrap">
+    <h2 class="section-heading" id="verify-heading">Don't trust us. Verify.</h2>
+    <p class="section-lede">
+      A privacy claim you cannot check is just marketing. Every one of these
+      takes under a minute.
+    </p>
+
+    <ol class="verify-list">
+      <li>
+        <h3>Pull the plug</h3>
+        <p>
+          Load this page, then turn off Wi-Fi and mobile data. Generate a code,
+          change the colours, download the PNG and the SVG. It all still works,
+          because none of it needed a network.
+        </p>
+      </li>
+      <li>
+        <h3>Watch the network tab</h3>
+        <p>
+          Open DevTools &rarr; Network, then type into any field. You will see
+          zero requests. Not a beacon, not a pixel, not an analytics ping.
+        </p>
+      </li>
+      <li>
+        <h3>Read the policy the browser enforces</h3>
+        <p>
+          Check the response headers for <code>Content-Security-Policy</code>.
+          It contains <code>connect-src 'none'</code> — an instruction to your
+          browser to block every outbound request this page could attempt.
+          Even if our code tried to phone home, your browser would stop it.
+        </p>
+      </li>
+      <li>
+        <h3>Read the source</h3>
+        <p>
+          The whole project is public and MIT licensed. The QR encoder is the
+          open-source <code>node-qrcode</code> library, built from source and
+          served from this domain — there is no third-party CDN, no font
+          service and no tag manager anywhere on the site.
+        </p>
+      </li>
+    </ol>
+
+    <div class="csp-proof">
+      <span class="csp-label">Live policy on this response</span>
+      <code class="csp-code">connect-src 'none'</code>
+      <span class="csp-note">Your browser is enforcing this right now.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== ABOUT ===================== -->
+<section class="about" id="about" aria-labelledby="about-heading">
+  <div class="wrap">
+    <h2 class="section-heading" id="about-heading">About</h2>
+
+    <div class="about-grid">
+      <div class="about-card">
+        <p class="about-lead">
+          Designed and developed by
+          <strong>Vishal Srivastava</strong>, security researcher and
+          PhD Scholar at <strong>IIT Kanpur</strong>, who built this secure QR
+          code generator after watching people paste passwords, private links
+          and personal details into websites that had no reason to receive them.
+        </p>
+        <p>
+          The design goal was narrow and deliberate: produce a correct, static,
+          print-quality QR code without the site ever learning what it contains.
+          That constraint is why there is no account system, no history, no
+          cloud sync and no API — each of those would require the data to leave
+          your device.
+        </p>
+        <p>
+          Found a flaw? Reports are genuinely welcome — see
+          <a href="{{ url_for('site.security') }}">the security page</a> or
+          <a href="{{ url_for('site.security_txt') }}">security.txt</a>.
+        </p>
+      </div>
+
+      <aside class="about-facts">
+        <h3>At a glance</h3>
+        <dl>
+          <div><dt>Encoding</dt><dd>In-browser, client-side</dd></div>
+          <div><dt>Data sent to server</dt><dd>None</dd></div>
+          <div><dt>Cookies</dt><dd>None</dd></div>
+          <div><dt>Analytics</dt><dd>None</dd></div>
+          <div><dt>Third-party requests</dt><dd>None</dd></div>
+          <div><dt>Code type</dt><dd>Static (never expires)</dd></div>
+          <div><dt>Licence</dt><dd>MIT, source public</dd></div>
+          <div><dt>Price</dt><dd>Free</dd></div>
+        </dl>
+      </aside>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ asset_url('js/vendor/qrcode.min.js') }}"></script>
+<script src="{{ asset_url('js/app.js') }}"></script>
+{% endblock %}

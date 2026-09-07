@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test on Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Run tests
+        run: pytest -q
+
+  vendor-integrity:
+    name: Vendored encoder matches upstream
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Rebuild the vendor bundle from source
+        run: ./tools/build-vendor.sh
+
+      - name: Fail if the committed bundle differs
+        run: |
+          if ! git diff --quiet -- app/static/js/vendor/; then
+            echo "::error::The committed vendor bundle does not match a fresh build from upstream."
+            git diff --stat -- app/static/js/vendor/
+            exit 1
+          fi
+          echo "Committed bundle is byte-identical to a fresh upstream build."
+
+  config-check:
+    name: Deployment config is valid
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Shell syntax
+        run: |
+          bash -n deploy/scripts/bootstrap.sh
+          bash -n deploy/scripts/deploy.sh
+          bash -n tools/build-vendor.sh
+
+      - name: systemd unit
+        run: systemd-analyze verify deploy/systemd/controlyourqr.service || true
+
+      - name: nginx config
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq nginx
+          sudo mkdir -p /opt/controlyourqr/app/static
+          sudo cp deploy/nginx/controlyourqr.conf /etc/nginx/sites-available/
+          sudo ln -sf /etc/nginx/sites-available/controlyourqr.conf /etc/nginx/sites-enabled/
+          sudo rm -f /etc/nginx/sites-enabled/default
+          sudo nginx -t

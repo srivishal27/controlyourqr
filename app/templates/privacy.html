@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}Privacy — {{ site_name }}{% endblock %}
+{% block description %}ControlYourQR collects nothing. No accounts, no cookies, no analytics, no logs of your content. Here is exactly what that means.{% endblock %}
+
+{% block content %}
+<div class="doc wrap">
+  <header class="doc-head">
+    <h1>Privacy</h1>
+    <p>The short version: we do not collect your data, because we never receive it.</p>
+    <p class="doc-updated">Last updated: {{ current_year }}</p>
+  </header>
+
+  <div class="doc-body">
+    <div class="callout">
+      <p>
+        The content you type into the generator — links, text, Wi-Fi passwords,
+        contact details, coordinates — is encoded into a QR code by JavaScript
+        running inside your browser. It is never transmitted to this server or
+        to any other. There is no endpoint on this site that accepts it.
+      </p>
+    </div>
+
+    <h2>What we do not do</h2>
+    <ul>
+      <li><strong>No accounts.</strong> There is no sign-up, log-in or password.</li>
+      <li><strong>No cookies.</strong> The site sets none, of any kind, including "essential" ones.</li>
+      <li><strong>No analytics.</strong> No Google Analytics, no tag manager, no pixel, no heatmap, no session recording.</li>
+      <li><strong>No third-party requests.</strong> No CDN, no external font service, no embedded widgets. Every file comes from this domain.</li>
+      <li><strong>No content logging.</strong> Your QR content never reaches the server, so there is nothing to log, retain or hand over.</li>
+      <li><strong>No scan tracking.</strong> The codes are static. Scanning one contacts your destination directly and never touches us.</li>
+      <li><strong>No selling or sharing.</strong> There is no data to sell.</li>
+    </ul>
+
+    <h2>What is stored on your device</h2>
+    <p>
+      Two small values are kept in your browser's <code>localStorage</code>, on
+      your machine only. They are never sent anywhere and you can clear them at
+      any time by clearing site data.
+    </p>
+    <ul>
+      <li><code>cyqr:theme</code> — whether you chose the light or dark theme.</li>
+      <li><code>cyqr:options</code> — your appearance defaults: error-correction level, export size, quiet zone and colours.</li>
+    </ul>
+    <p>
+      The <em>content</em> of your QR codes is deliberately <strong>not</strong>
+      saved, not even locally. There is no history feature, because a shared or
+      lost device should not be able to reveal what you encoded.
+    </p>
+
+    <h2>What the server sees</h2>
+    <p>
+      Serving a web page requires the web server to receive an HTTP request. Our
+      web server therefore momentarily processes the same information every web
+      server does: your IP address, the page path, your user agent and the
+      timestamp. This is what makes it technically possible to send you the page
+      at all.
+    </p>
+    <ul>
+      <li>These access logs are kept for a short operational window and used only for availability and abuse mitigation.</li>
+      <li>They record which <em>page</em> was requested — never what you typed into it, since that is never sent.</li>
+      <li>They are not joined to any profile, advertising identifier or third-party service.</li>
+    </ul>
+
+    <h2>Enforced, not just promised</h2>
+    <p>
+      Every response from this site carries a
+      <code>Content-Security-Policy</code> header containing
+      <code>connect-src 'none'</code>. That directive instructs your browser to
+      block all outbound network calls from our pages — fetch, XHR, WebSocket,
+      EventSource and beacons alike. Even a compromised or malicious script on
+      this site could not exfiltrate what you typed, because the browser itself
+      refuses to make the request.
+    </p>
+
+    <h2>Your rights</h2>
+    <p>
+      Data-protection rights such as access, rectification and erasure apply to
+      personal data a service holds about you. We hold none, so there is nothing
+      to request, correct or delete. If you believe otherwise, write to
+      <a href="mailto:{{ contact_email }}">{{ contact_email }}</a> and we will
+      look into it.
+    </p>
+
+    <h2>Changes</h2>
+    <p>
+      If this policy ever changes, the change will be visible in the public
+      commit history of the
+      <a href="https://github.com/srivishal27/controlyourqr" rel="noopener noreferrer">source repository</a>,
+      alongside the code that implements it.
+    </p>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Node (build-time only, for tools/build-vendor.sh)
+node_modules/
+package-lock.json
+
+# Environment / secrets
+.env
+*.env
+!deploy/**/*.env.example
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp

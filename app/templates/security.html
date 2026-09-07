@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}Security — {{ site_name }}{% endblock %}
+{% block description %}How ControlYourQR is hardened, how to verify the privacy claims yourself, and how to report a vulnerability.{% endblock %}
+
+{% block content %}
+<div class="doc wrap">
+  <header class="doc-head">
+    <h1>Security</h1>
+    <p>How this site is built, how to check it, and how to report a problem.</p>
+    <p class="doc-updated">Version {{ app_version }}</p>
+  </header>
+
+  <div class="doc-body">
+    <h2>Threat model</h2>
+    <p>
+      The asset being protected is the content a user encodes: private URLs,
+      Wi-Fi credentials, personal contact details. The adversary we design
+      against is the operator of the website itself — that is, us — plus anyone
+      who compromises it, and any third party we might otherwise have invited
+      onto the page.
+    </p>
+    <p>
+      The mitigation is structural rather than procedural: the encoding happens
+      client-side, and the browser is instructed to block the network paths that
+      exfiltration would need. A promise not to look is worth little; removing
+      the ability to look is worth a great deal.
+    </p>
+
+    <h2>Response headers</h2>
+    <ul>
+      <li><strong><code>Content-Security-Policy</code></strong> — <code>default-src 'self'</code> with <code>connect-src 'none'</code>, <code>object-src 'none'</code>, <code>base-uri 'none'</code>, <code>form-action 'none'</code> and <code>frame-ancestors 'none'</code>. No <code>unsafe-inline</code>, no <code>unsafe-eval</code>, no nonces: every script and stylesheet is an external file on this origin.</li>
+      <li><strong><code>Strict-Transport-Security</code></strong> — two years, <code>includeSubDomains</code>, preload-eligible.</li>
+      <li><strong><code>X-Content-Type-Options: nosniff</code></strong> and <strong><code>X-Frame-Options: DENY</code></strong>.</li>
+      <li><strong><code>Referrer-Policy: no-referrer</code></strong> — we leak nothing to anywhere you navigate next.</li>
+      <li><strong><code>Permissions-Policy</code></strong> — camera, microphone, geolocation, USB, serial, payment and a dozen more are switched off at the platform level.</li>
+      <li><strong>Cross-origin isolation</strong> — <code>COOP: same-origin</code>, <code>CORP: same-origin</code>, <code>COEP: require-corp</code>.</li>
+    </ul>
+
+    <h2>Supply chain</h2>
+    <p>
+      The site loads exactly two scripts, one stylesheet and one SVG icon, all
+      from this origin. There is no CDN, no web font service, no analytics
+      snippet and no tag manager, so there is no third party who could change
+      the page's behaviour after the fact.
+    </p>
+    <ul>
+      <li>The encoder is <a href="https://github.com/soldair/node-qrcode" rel="noopener noreferrer">node-qrcode</a> (MIT), pinned to an exact version and bundled from source with esbuild by <code>tools/build-vendor.sh</code>.</li>
+      <li>The bundle is committed to the repository, so the served bytes are reviewable in the diff rather than fetched at deploy time.</li>
+      <li>The Python side is Flask and gunicorn with pinned versions; the server holds no state, no database and no user input.</li>
+    </ul>
+
+    <h2>Verify it yourself</h2>
+    <ul>
+      <li>Load the generator, disconnect from the network, and confirm that generating and downloading still work end to end.</li>
+      <li>Open DevTools &rarr; Network and type into the fields. There are no requests.</li>
+      <li>Inspect the response headers and read the CSP for yourself.</li>
+      <li>Read <code>app/static/js/app.js</code> in the repository — it is unminified and commented, and contains no network calls.</li>
+      <li>Rebuild the vendor bundle with <code>tools/build-vendor.sh</code> and diff it against the committed file.</li>
+    </ul>
+
+    <h2>Reporting a vulnerability</h2>
+    <p>
+      Reports are welcome and will be taken seriously. Email
+      <a href="mailto:{{ contact_email }}">{{ contact_email }}</a> with enough
+      detail to reproduce the issue. Machine-readable contact details are at
+      <a href="{{ url_for('site.security_txt') }}">/.well-known/security.txt</a>
+      per RFC 9116.
+    </p>
+    <p>
+      Please give a reasonable window to ship a fix before publishing. Testing
+      against this site is fine as long as it is non-destructive and does not
+      degrade the service for anyone else — no denial-of-service, no automated
+      scanning at volume, no attempts against third-party infrastructure.
+    </p>
+
+    <h2>Known limitations</h2>
+    <ul>
+      <li>A QR code is a container, not a guarantee. This tool encodes exactly what you give it; it does not vouch for where a link leads.</li>
+      <li>Clipboard copy needs a secure context and a browser that supports <code>ClipboardItem</code>. Downloads are the portable path.</li>
+      <li>Very large payloads (long vCards, long text) may exceed the capacity of a single symbol at high correction levels. The tool tells you when that happens rather than silently truncating.</li>
+      <li>Client-side encoding means the security of your data is bounded by the security of your own device and browser.</li>
+    </ul>
+  </div>
+</div>
+{% endblock %}
