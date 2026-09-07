@@ -398,8 +398,11 @@
         <p>
           The whole project is public and MIT licensed. The QR encoder is the
           open-source <code>node-qrcode</code> library, built from source and
-          served from this domain — there is no third-party CDN, no font
-          service and no tag manager anywhere on the site.
+          served from this domain — no font service, no analytics snippet and
+          no tag manager anywhere on the site. A CDN fronts the domain for
+          denial-of-service protection, which we
+          <a href="{{ url_for('site.privacy') }}">spell out on the privacy page</a>
+          rather than leave you to find in a header.
         </p>
       </li>
     </ol>
