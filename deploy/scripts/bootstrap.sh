@@ -116,9 +116,9 @@ Next steps:
   1. Point the DNS A record for controlyourqr.com at this machine's external IP.
   2. Once it resolves, enable HTTPS:
        sudo certbot --nginx -d controlyourqr.com -d www.controlyourqr.com
-  3. Turn on HSTS afterwards (it is off until TLS exists):
-       echo 'ENABLE_HSTS=true' | sudo tee /etc/${APP_NAME}/app.env
-       sudo systemctl restart ${APP_NAME}
+
+     HSTS needs no further action: the app emits it only on requests that
+     actually arrived over TLS, so it switches itself on with the certificate.
 
 Useful commands:
   systemctl status ${APP_NAME}

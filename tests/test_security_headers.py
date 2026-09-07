@@ -51,15 +51,38 @@ def test_hsts_follows_configuration(client, app):
     assert "Strict-Transport-Security" not in client.get("/").headers
 
 
-def test_hsts_is_emitted_in_production():
+@pytest.fixture(scope="module")
+def production_client():
     from app import create_app
 
     production = create_app("production")
     production.config["TESTING"] = True
-    with production.test_client() as production_client:
-        header = production_client.get("/").headers["Strict-Transport-Security"]
+    return production.test_client()
+
+
+def test_hsts_is_emitted_over_tls(production_client):
+    response = production_client.get("/", base_url="https://controlyourqr.com")
+    header = response.headers["Strict-Transport-Security"]
     assert "max-age=63072000" in header
     assert "includeSubDomains" in header
+
+
+def test_hsts_is_emitted_behind_a_tls_terminating_proxy(production_client):
+    """nginx terminates TLS and proxies plaintext, so trust its X-Forwarded-Proto."""
+    response = production_client.get("/", headers={"X-Forwarded-Proto": "https"})
+    assert "Strict-Transport-Security" in response.headers
+
+
+def test_hsts_is_withheld_on_plaintext(production_client):
+    """RFC 6797: HSTS over plain HTTP is ignored, so do not claim it.
+
+    This also means the header starts appearing by itself once certbot is run,
+    with no configuration change to remember.
+    """
+    assert "Strict-Transport-Security" not in production_client.get("/").headers
+    assert "Strict-Transport-Security" not in production_client.get(
+        "/", headers={"X-Forwarded-Proto": "http"}
+    ).headers
 
 
 def test_no_cookies_are_set(client):

@@ -11,7 +11,7 @@ the user's browser enforces and any visitor can verify in DevTools.
 
 from __future__ import annotations
 
-from flask import Flask, Response
+from flask import Flask, Response, request
 
 # Rendered once at import time; the policy is static by design (no nonces, no
 # per-request values) so that it can be audited by reading this file.
@@ -83,6 +83,18 @@ SECURITY_HEADERS: dict[str, str] = {
 HSTS_VALUE = "max-age=63072000; includeSubDomains; preload"
 
 
+def _is_https(req) -> bool:
+    """True when the client's connection to nginx used TLS.
+
+    HSTS is meaningless — and per RFC 6797 ignored — on a plaintext response,
+    so we emit it only once TLS is genuinely in front. This makes the header
+    appear by itself the moment certbot lands, with nothing to remember to
+    switch on afterwards.
+    """
+    forwarded = req.headers.get("X-Forwarded-Proto", "")
+    return req.is_secure or forwarded.split(",")[0].strip().lower() == "https"
+
+
 def init_security(app: Flask) -> None:
     """Attach the response hardening hook to ``app``."""
 
@@ -91,7 +103,7 @@ def init_security(app: Flask) -> None:
         for header, value in SECURITY_HEADERS.items():
             response.headers.setdefault(header, value)
 
-        if app.config.get("ENABLE_HSTS"):
+        if app.config.get("ENABLE_HSTS") and _is_https(request):
             response.headers.setdefault("Strict-Transport-Security", HSTS_VALUE)
 
         # Advertise nothing about the stack.

@@ -110,9 +110,12 @@ Then point DNS at the host and enable TLS:
 
 ```bash
 sudo certbot --nginx -d controlyourqr.com -d www.controlyourqr.com
-echo 'ENABLE_HSTS=true' | sudo tee /etc/controlyourqr/app.env
-sudo systemctl restart controlyourqr
 ```
+
+HSTS requires no follow-up step: the application emits
+`Strict-Transport-Security` only on requests that actually arrived over TLS
+(checked via `X-Forwarded-Proto`), so it activates with the certificate and is
+never advertised over plaintext, where RFC 6797 says it would be ignored.
 
 Subsequent updates:
 
