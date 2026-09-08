@@ -234,6 +234,30 @@ svg { display: block; }
 .brand-text strong { font-weight: 600; color: var(--accent); }
 
 .site-nav { display: flex; gap: 4px; }
+.site-nav .nav-secondary { display: none; }
+
+.nav-toggle {
+  display: none;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.nav-toggle:hover { background: var(--surface-2); color: var(--text); }
+.nav-toggle svg {
+  width: 19px; height: 19px;
+  fill: none; stroke: currentColor; stroke-width: 1.8;
+  stroke-linecap: round; stroke-linejoin: round;
+  grid-area: 1 / 1;
+}
+.nav-toggle .icon-close { display: none; }
+.nav-toggle[aria-expanded="true"] .icon-menu  { display: none; }
+.nav-toggle[aria-expanded="true"] .icon-close { display: block; }
 .site-nav a {
   color: var(--text-muted);
   font-size: 14px;
@@ -284,7 +308,26 @@ svg { display: block; }
 }
 
 @media (max-width: 720px) {
-  .site-nav { display: none; }
+  .nav-toggle { display: grid; }
+
+  /* The links stay in the DOM and are relaid out here, so the menu still
+     works as a plain list if nav.js never runs. */
+  .site-nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px 24px 14px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+  }
+  .site-nav[data-open="true"] { display: flex; }
+  .site-nav .nav-secondary { display: block; }
+  .site-nav a { font-size: 15px; padding: 13px 12px; }
 }
 
 /* --------------------------------------------------------------------------
@@ -399,11 +442,28 @@ svg { display: block; }
   gap: 24px;
   align-items: start;
 }
+.panel-input   { grid-column: 1; grid-row: 1; }
+.panel-options { grid-column: 1; grid-row: 2; }
+.panel-preview { grid-column: 2; grid-row: 1 / span 2; }
+
 @media (max-width: 900px) {
-  .tool { grid-template-columns: 1fr; }
+  /* minmax(0, 1fr) rather than a bare 1fr: `1fr` is shorthand for
+     minmax(auto, 1fr), and that auto minimum lets the tab strip's max-content
+     width push the track wider than the viewport, which scrolled the whole
+     page sideways on every phone. */
+  .tool { grid-template-columns: minmax(0, 1fr); }
+  .panel-input, .panel-preview, .panel-options { grid-column: 1; grid-row: auto; }
+
+  /* What you typed, then the code it made, then the appearance controls.
+     Otherwise the preview sits below the whole options block and you cannot
+     see your QR code while typing. */
+  .panel-input   { order: 1; }
+  .panel-preview { order: 2; }
+  .panel-options { order: 3; }
 }
 
 .panel {
+  min-width: 0;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
@@ -526,8 +586,7 @@ input:focus, select:focus, textarea:focus {
 }
 
 /* --- options accordion --- */
-.options { border-top: 1px solid var(--border); margin-top: 20px; }
-.options > summary {
+.panel-options > summary {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -540,15 +599,15 @@ input:focus, select:focus, textarea:focus {
   list-style: none;
   user-select: none;
 }
-.options > summary::-webkit-details-marker { display: none; }
-.options > summary:hover { color: var(--text); }
-.options .chev {
+.panel-options > summary::-webkit-details-marker { display: none; }
+.panel-options > summary:hover { color: var(--text); }
+.panel-options .chev {
   width: 16px; height: 16px;
   fill: none; stroke: currentColor; stroke-width: 2;
   stroke-linecap: round; stroke-linejoin: round;
   transition: transform .18s ease;
 }
-.options[open] .chev { transform: rotate(180deg); }
+.panel-options[open] .chev { transform: rotate(180deg); }
 
 .options-body {
   padding: 4px 22px 22px;
@@ -676,6 +735,11 @@ input[type="color"]::-moz-color-swatch { border: 0; border-radius: 5px; }
   top: calc(var(--header-h) + 20px);
   max-width: 380px;
   margin-inline: auto;
+}
+@media (max-width: 900px) {
+  /* Nothing to stick to in a single column, and a 380px tall sticky card
+     would cover most of a phone screen. */
+  .preview-sticky { position: static; }
 }
 
 .qr-stage {
@@ -1101,7 +1165,71 @@ input[type="color"]::-moz-color-swatch { border: 0; border-radius: 5px; }
 .footer-bottom p { margin: 0; font-size: 12.5px; color: var(--text-faint); }
 
 /* --------------------------------------------------------------------------
-   13. Utilities
+   13. Small screens
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+  /* iOS Safari zooms the whole page when a focused field is under 16px, which
+     leaves the layout scaled up and scrolled sideways after every tap. 16px is
+     the threshold, not a preference. */
+  input[type="text"], input[type="url"], input[type="email"],
+  input[type="tel"], select, textarea,
+  .color-field input[type="text"] {
+    font-size: 16px;
+  }
+
+  /* Comfortable touch targets. The 44px floor is the smallest reliably
+     tappable size for an adult fingertip. */
+  .tablist [role="tab"] { padding: 13px 14px 15px; }
+  .segmented [role="radio"] { padding: 11px 4px 10px; }
+  .btn { padding: 13px 16px; min-height: 46px; }
+  .btn-sm { min-height: 40px; }
+  .theme-toggle, .nav-toggle { width: 44px; height: 44px; }
+  .panel-options > summary { padding: 17px 20px; }
+  .checkbox { min-height: 44px; }
+  .checkbox input { width: 20px; height: 20px; }
+
+  /* Wider hit area for the sliders without changing how they look. */
+  input[type="range"] { height: 40px; }
+
+  .footer-links a { padding: 7px 0; }
+}
+
+@media (max-width: 560px) {
+  .tool { gap: 16px; }
+  .fields { padding: 18px 16px 4px; }
+  .panel-preview { padding: 16px; }
+  .options-body { padding: 4px 16px 20px; }
+  .panel-options > summary { padding: 16px 16px; }
+  .tablist { padding: 6px 6px 0; }
+
+  .hero { padding: 52px 0 40px; }
+  .generator { padding: 36px 0 52px; }
+  .why, .verify, .about { padding: 52px 0; }
+  .doc { padding: 40px 0 60px; }
+
+  .card { padding: 22px 20px 18px; }
+  .about-card { padding: 24px 20px; }
+  .csp-proof { padding: 14px 16px; }
+  .verify-list { gap: 22px; }
+
+  .footer-links { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
+}
+
+@media (max-width: 430px) {
+  .wrap { padding-inline: 18px; }
+
+  /* Four columns leave no room for the labels at this width. */
+  .qr-meta { grid-template-columns: repeat(2, 1fr); }
+
+  .actions { grid-template-columns: 1fr; }
+  .opt-colors { grid-template-columns: 1fr; }
+  .trust-chips { gap: 6px; }
+  .trust-chips li { font-size: 12.5px; padding: 5px 11px; }
+}
+
+/* --------------------------------------------------------------------------
+   14. Utilities
    -------------------------------------------------------------------------- */
 [hidden] { display: none !important; }
 

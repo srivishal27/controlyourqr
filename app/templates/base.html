@@ -26,6 +26,7 @@
   {# Runs before first paint so the chosen theme never flashes. External file,
      because the Content-Security-Policy forbids inline scripts. #}
   <script src="{{ asset_url('js/theme.js') }}"></script>
+  <script src="{{ asset_url('js/nav.js') }}" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -92,11 +93,23 @@
         <span class="brand-text">Control<strong>Your</strong>QR</span>
       </a>
 
-      <nav class="site-nav" aria-label="Primary">
+      <nav class="site-nav" id="site-nav" aria-label="Primary">
         <a href="{{ url_for('site.index') }}#generator">Generator</a>
         <a href="{{ url_for('site.index') }}#why">Why this exists</a>
         <a href="{{ url_for('site.index') }}#about">About</a>
+        <a class="nav-secondary" href="{{ url_for('site.security') }}">Security</a>
+        <a class="nav-secondary" href="{{ url_for('site.privacy') }}">Privacy</a>
       </nav>
+
+      <button type="button" class="nav-toggle" id="nav-toggle"
+              aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+        <svg class="icon-menu" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M4 7h16M4 12h16M4 17h16"/>
+        </svg>
+        <svg class="icon-close" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M6 6l12 12M18 6L6 18"/>
+        </svg>
+      </button>
 
       <button type="button" class="theme-toggle" id="theme-toggle"
               aria-label="Switch colour theme" title="Switch colour theme">

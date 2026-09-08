@@ -169,56 +169,6 @@
           </div>
         </div>
 
-        <!-- Options -->
-        <details class="options" open>
-          <summary>
-            <span>Appearance &amp; encoding</span>
-            <svg viewBox="0 0 24 24" class="chev" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
-          </summary>
-
-          <div class="options-body">
-            <div class="opt">
-              <span class="opt-label" id="ecc-label">Error correction</span>
-              <div class="segmented" role="radiogroup" aria-labelledby="ecc-label">
-                <button type="button" role="radio" data-ecc="L" aria-checked="false">L<small>7%</small></button>
-                <button type="button" role="radio" data-ecc="M" aria-checked="true">M<small>15%</small></button>
-                <button type="button" role="radio" data-ecc="Q" aria-checked="false">Q<small>25%</small></button>
-                <button type="button" role="radio" data-ecc="H" aria-checked="false">H<small>30%</small></button>
-              </div>
-              <p class="hint">Higher levels survive more damage, smudging and print wear, at the cost of a denser code.</p>
-            </div>
-
-            <div class="opt">
-              <label class="opt-label" for="opt-size">Export size <span class="opt-value" id="size-value">1024 px</span></label>
-              <input type="range" id="opt-size" min="256" max="2048" step="64" value="1024">
-            </div>
-
-            <div class="opt">
-              <label class="opt-label" for="opt-margin">Quiet zone <span class="opt-value" id="margin-value">4 modules</span></label>
-              <input type="range" id="opt-margin" min="0" max="10" step="1" value="4">
-              <p class="hint">The blank border scanners need to lock on. Below 4 is risky in print.</p>
-            </div>
-
-            <div class="opt opt-colors">
-              <div>
-                <label class="opt-label" for="opt-fg">Foreground</label>
-                <div class="color-field">
-                  <input type="color" id="opt-fg" value="#000000">
-                  <input type="text" id="opt-fg-hex" value="#000000" spellcheck="false" aria-label="Foreground hex value">
-                </div>
-              </div>
-              <div>
-                <label class="opt-label" for="opt-bg">Background</label>
-                <div class="color-field">
-                  <input type="color" id="opt-bg" value="#ffffff">
-                  <input type="text" id="opt-bg-hex" value="#ffffff" spellcheck="false" aria-label="Background hex value">
-                </div>
-              </div>
-            </div>
-
-            <button type="button" class="btn btn-ghost btn-sm" id="btn-reset">Reset to defaults</button>
-          </div>
-        </details>
       </div>
 
       <!-- ---------- Preview column ---------- -->
@@ -258,6 +208,57 @@
           </p>
         </div>
       </div>
+
+      <!-- ---------- Options ---------- -->
+      <details class="panel panel-options" open>
+        <summary>
+          <span>Appearance &amp; encoding</span>
+          <svg viewBox="0 0 24 24" class="chev" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </summary>
+
+        <div class="options-body">
+          <div class="opt">
+            <span class="opt-label" id="ecc-label">Error correction</span>
+            <div class="segmented" role="radiogroup" aria-labelledby="ecc-label">
+              <button type="button" role="radio" data-ecc="L" aria-checked="false">L<small>7%</small></button>
+              <button type="button" role="radio" data-ecc="M" aria-checked="true">M<small>15%</small></button>
+              <button type="button" role="radio" data-ecc="Q" aria-checked="false">Q<small>25%</small></button>
+              <button type="button" role="radio" data-ecc="H" aria-checked="false">H<small>30%</small></button>
+            </div>
+            <p class="hint">Higher levels survive more damage, smudging and print wear, at the cost of a denser code.</p>
+          </div>
+
+          <div class="opt">
+            <label class="opt-label" for="opt-size">Export size <span class="opt-value" id="size-value">1024 px</span></label>
+            <input type="range" id="opt-size" min="256" max="2048" step="64" value="1024">
+          </div>
+
+          <div class="opt">
+            <label class="opt-label" for="opt-margin">Quiet zone <span class="opt-value" id="margin-value">4 modules</span></label>
+            <input type="range" id="opt-margin" min="0" max="10" step="1" value="4">
+            <p class="hint">The blank border scanners need to lock on. Below 4 is risky in print.</p>
+          </div>
+
+          <div class="opt opt-colors">
+            <div>
+              <label class="opt-label" for="opt-fg">Foreground</label>
+              <div class="color-field">
+                <input type="color" id="opt-fg" value="#000000">
+                <input type="text" id="opt-fg-hex" value="#000000" spellcheck="false" aria-label="Foreground hex value">
+              </div>
+            </div>
+            <div>
+              <label class="opt-label" for="opt-bg">Background</label>
+              <div class="color-field">
+                <input type="color" id="opt-bg" value="#ffffff">
+                <input type="text" id="opt-bg-hex" value="#ffffff" spellcheck="false" aria-label="Background hex value">
+              </div>
+            </div>
+          </div>
+
+          <button type="button" class="btn btn-ghost btn-sm" id="btn-reset">Reset to defaults</button>
+        </div>
+      </details>
 
     </div>
   </div>
