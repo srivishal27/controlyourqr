@@ -863,8 +863,20 @@ input[type="color"]::-moz-color-swatch { border: 0; border-radius: 5px; }
 .checklist li strong { color: var(--text); font-weight: 600; }
 .checklist li::before {
   position: absolute;
-  left: 0; top: 0;
-  width: 18px; height: 18px;
+  left: 0;
+  /* Centre the disc on the first line of text rather than on the top of the
+     block. At top:0 an 18px disc centres at 9px while the text's cap height
+     centres at ~10.9px, which reads as visibly high — most of all on narrow
+     screens, where every item wraps to several lines and the eye has a whole
+     column of markers to compare.
+       (1.58 x 14.5px line box - 18px disc) / 2 = 2px
+     Written out rather than as a calc(): `em` inside a pseudo-element resolves
+     against the pseudo-element's own font-size (11px here), not the list
+     item's, so the tidier-looking formula would silently compute the wrong
+     offset. */
+  top: 2px;
+  width: 18px;
+  height: 18px;
   display: grid;
   place-items: center;
   border-radius: 50%;
